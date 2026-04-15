@@ -93,5 +93,5 @@ A avaliação considerará principalmente o funcionamento ponta a ponta da aplic
 
 # Desafio extra 
 
-Crie as demais operações CRUD
-Deixe o projeto pronto para multi linguagem.
+- Crie as demais operações CRUD
+- Deixe o projeto pronto para multi linguagem, tanto no backend quanto no frontend.
