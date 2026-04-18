@@ -1,0 +1,122 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--text-strong);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.82), transparent 38%),
+    linear-gradient(180deg, #f7f2ea 0%, #f3ece2 42%, #efe7dc 100%);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 12% 15%, rgba(255, 255, 255, 0.56), transparent 22%),
+    radial-gradient(circle at 92% 8%, rgba(222, 206, 185, 0.28), transparent 18%),
+    radial-gradient(circle at 76% 84%, rgba(235, 220, 203, 0.44), transparent 20%);
+}
+
+a,
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+input {
+  width: 100%;
+}
+
+#root {
+  min-height: 100vh;
+  padding: 28px;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  color: var(--text-strong);
+}
+
+p {
+  margin: 0;
+  color: var(--text-soft);
+}
+
+.primary-button,
+.secondary-button {
+  border-radius: var(--radius-pill);
+  padding: 0.95rem 1.35rem;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.primary-button:hover,
+.secondary-button:hover {
+  transform: translateY(-1px);
+}
+
+.primary-button {
+  background: linear-gradient(135deg, #d5b99a 0%, #c6a988 100%);
+  color: #fffdf9;
+  box-shadow: 0 14px 24px rgba(167, 134, 99, 0.2);
+}
+
+.secondary-button {
+  background: rgba(207, 179, 149, 0.18);
+  color: var(--text-strong);
+}
+
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.sidebar__nav-item:focus-visible,
+.sidebar__locale-button:focus-visible,
+.form-field__input:focus-visible {
+  outline: 3px solid rgba(207, 179, 149, 0.32);
+  outline-offset: 3px;
+}
+
+@keyframes fadeRise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 960px) {
+  #root {
+    padding: 14px;
+  }
+}

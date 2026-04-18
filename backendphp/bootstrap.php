@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+spl_autoload_register(static function (string $className): void {
+    $prefix = 'App\\';
+    $baseDir = __DIR__ . '/src/';
+
+    if (!str_starts_with($className, $prefix)) {
+        return;
+    }
+
+    $relativeClass = substr($className, strlen($prefix));
+    $filePath = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
+
+    if (is_file($filePath)) {
+        require $filePath;
+    }
+});

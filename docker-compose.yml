@@ -1,0 +1,82 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: aplis_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: aplis_teste
+      MYSQL_USER: aplis
+      MYSQL_PASSWORD: aplis
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend-php:
+    build:
+      context: ./backendphp
+      dockerfile: Dockerfile
+    container_name: aplis_backend-php
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./backendphp:/var/www/html
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: false
+      CORS_ORIGIN: http://localhost:5173
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: aplis_teste
+      DB_USERNAME: aplis
+      DB_PASSWORD: aplis
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  backend-node:
+    build:
+      context: ./backendjs
+      dockerfile: Dockerfile
+    container_name: aplis_backend-node
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      CORS_ORIGIN: http://localhost:5173
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: aplis_teste
+      DB_USERNAME: aplis
+      DB_PASSWORD: aplis
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+      args:
+        VITE_PHP_API_URL: http://localhost:8000
+        VITE_NODE_API_URL: http://localhost:3000
+    container_name: aplis_frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend-php
+      - backend-node
+
+volumes:
+  mysql_data:
