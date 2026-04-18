@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Medicos;
 
 use App\Exceptions\BusinessRuleException;
+use App\Exceptions\NotFoundException;
 use RuntimeException;
 
 final class MedicoService
@@ -42,5 +43,44 @@ final class MedicoService
         }
 
         return $this->medicoMapper->fromDatabaseRow($medicoCriado);
+    }
+
+    public function findById(int $id): MedicoResponse
+    {
+        return $this->medicoMapper->fromDatabaseRow($this->findMedicoRowOrFail($id));
+    }
+
+    public function update(int $id, MedicoRequest $medicoRequest): MedicoResponse
+    {
+        $this->findMedicoRowOrFail($id);
+
+        if ($this->medicoRepository->existsByCrmAndUfcrmExceptId(
+            $medicoRequest->getCrm(),
+            $medicoRequest->getUfcrm(),
+            $id
+        )) {
+            throw new BusinessRuleException('Médico já cadastrado');
+        }
+
+        $this->medicoRepository->update($id, $medicoRequest);
+
+        return $this->findById($id);
+    }
+
+    public function delete(int $id): void
+    {
+        $this->findMedicoRowOrFail($id);
+        $this->medicoRepository->delete($id);
+    }
+
+    private function findMedicoRowOrFail(int $id): array
+    {
+        $medico = $this->medicoRepository->findById($id);
+
+        if ($medico === null) {
+            throw new NotFoundException('Médico não encontrado');
+        }
+
+        return $medico;
     }
 }

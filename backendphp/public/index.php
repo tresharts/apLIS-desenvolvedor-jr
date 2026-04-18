@@ -38,7 +38,10 @@ try {
 
     $router = new Router();
     $router->get('/api/v1/medicos', [$controller, 'index']);
+    $router->get('/api/v1/medicos/{id}', [$controller, 'show']);
     $router->post('/api/v1/medicos', [$controller, 'create']);
+    $router->put('/api/v1/medicos/{id}', [$controller, 'update']);
+    $router->delete('/api/v1/medicos/{id}', [$controller, 'delete']);
 
     $router->dispatch($request);
 } catch (Throwable $throwable) {

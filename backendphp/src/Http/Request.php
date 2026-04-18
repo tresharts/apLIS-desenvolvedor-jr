@@ -9,6 +9,7 @@ use App\Exceptions\ValidationException;
 final class Request
 {
     private ?array $decodedJsonBody = null;
+    private array $routeParams = [];
 
     /**
      * @param array<string, string> $headers
@@ -54,6 +55,18 @@ final class Request
         }
 
         return null;
+    }
+
+    public function setRouteParams(array $routeParams): void
+    {
+        $this->routeParams = $routeParams;
+    }
+
+    public function getRouteParam(string $name): ?string
+    {
+        $value = $this->routeParams[$name] ?? null;
+
+        return is_string($value) ? $value : null;
     }
 
     public function getJsonBody(): array
