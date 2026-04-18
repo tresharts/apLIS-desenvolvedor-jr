@@ -24,7 +24,7 @@ Entregar uma aplicação simples e funcional com:
 - Backend PHP: PHP 8.3 + PDO + MySQL
 - Backend Node.js: Node.js + Express + mysql2
 - Banco de dados: MySQL 8.4
-- Infra local: Docker Compose para MySQL e backend PHP
+- Infra local: Docker Compose para stack completa
 
 ## Estrutura do projeto
 
@@ -77,6 +77,25 @@ Entregar uma aplicação simples e funcional com:
 
 ## Como rodar localmente
 
+### Opção 1. Rodar tudo com Docker
+
+Na raiz do projeto:
+
+```bash
+docker compose up -d --build
+```
+
+Isso sobe:
+
+- MySQL com o schema inicial da pasta `database/`
+- backend PHP em `http://localhost:8000`
+- backend Node.js em `http://localhost:3000`
+- frontend em `http://localhost:5173`
+
+### Opção 2. Rodar em modo híbrido
+
+Se preferir desenvolvimento local para Node.js e React, também funciona:
+
 ### 1. Subir MySQL e backend PHP
 
 Na raiz do projeto:
@@ -85,14 +104,7 @@ Na raiz do projeto:
 docker compose up -d mysql backend-php
 ```
 
-Isso sobe:
-
-- MySQL com o schema inicial da pasta `database/`
-- backend PHP em `http://localhost:8000`
-
 ### 2. Rodar o backend Node.js
-
-Em outro terminal:
 
 ```bash
 cd backendjs
@@ -256,7 +268,7 @@ Exemplo de erro:
 - frontend organizado por feature
 - cliente HTTP centralizado no frontend
 - sidebar simples sem `react-router-dom`, já que o teste tem apenas duas seções
-- Docker usado onde agregava mais valor: MySQL e PHP
+- Docker disponível para a stack completa, com healthcheck no MySQL para garantir o startup do backend Node.js
 
 ## Limitações conhecidas
 
@@ -270,7 +282,7 @@ Reiniciar banco e aplicar schema do zero:
 
 ```bash
 docker compose down -v
-docker compose up -d mysql backend-php
+docker compose up -d --build
 ```
 
 Parar os containers:
