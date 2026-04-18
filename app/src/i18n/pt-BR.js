@@ -20,9 +20,16 @@ const ptBR = {
   },
   common: {
     formTitle: 'Novo cadastro',
+    editTitle: 'Editar cadastro',
     listTitle: 'Registros',
     save: 'Salvar cadastro',
+    saveChanges: 'Salvar alterações',
     saving: 'Salvando...',
+    cancel: 'Cancelar edição',
+    edit: 'Editar',
+    delete: 'Excluir',
+    deleting: 'Excluindo...',
+    actions: 'Ações',
     refresh: 'Atualizar lista',
     loading: 'Carregando dados...',
     networkError: 'Não foi possível conectar com as APIs configuradas.',
@@ -39,7 +46,10 @@ const ptBR = {
     title: 'Médicos',
     description:
       'Gerencie o cadastro de médicos usando a API em PHP conectada ao mesmo MySQL do projeto.',
-    successMessage: 'Médico criado com sucesso.',
+    createSuccessMessage: 'Médico criado com sucesso.',
+    updateSuccessMessage: 'Médico atualizado com sucesso.',
+    deleteSuccessMessage: 'Médico removido com sucesso.',
+    deleteConfirmation: 'Deseja realmente remover este médico?',
     form: {
       nome: 'Nome',
       nomePlaceholder: 'Ex.: João da Silva',
@@ -53,6 +63,7 @@ const ptBR = {
         nome: 'Nome',
         CRM: 'CRM',
         UFCRM: 'UFCRM',
+        actions: 'Ações',
       },
     },
     validation: {
@@ -67,7 +78,10 @@ const ptBR = {
     title: 'Pacientes',
     description:
       'Cadastre e acompanhe pacientes pela API em Node.js, compartilhando a mesma base MySQL.',
-    successMessage: 'Paciente criado com sucesso.',
+    createSuccessMessage: 'Paciente criado com sucesso.',
+    updateSuccessMessage: 'Paciente atualizado com sucesso.',
+    deleteSuccessMessage: 'Paciente removido com sucesso.',
+    deleteConfirmation: 'Deseja realmente remover este paciente?',
     form: {
       nome: 'Nome',
       nomePlaceholder: 'Ex.: Maria de Souza',
@@ -83,6 +97,7 @@ const ptBR = {
         dataNascimento: 'Data de nascimento',
         carteirinha: 'Carteirinha',
         cpf: 'CPF',
+        actions: 'Ações',
       },
     },
     validation: {

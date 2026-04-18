@@ -12,4 +12,12 @@ function createPaciente(payload) {
   return nodeApiClient.post('/api/v1/pacientes', payload)
 }
 
-export { createPaciente, listPacientes }
+function updatePaciente(id, payload) {
+  return nodeApiClient.put(`/api/v1/pacientes/${id}`, payload)
+}
+
+function deletePaciente(id) {
+  return nodeApiClient.delete(`/api/v1/pacientes/${id}`)
+}
+
+export { createPaciente, deletePaciente, listPacientes, updatePaciente }

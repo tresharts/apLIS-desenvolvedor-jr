@@ -20,9 +20,16 @@ const enUS = {
   },
   common: {
     formTitle: 'New record',
+    editTitle: 'Edit record',
     listTitle: 'Records',
     save: 'Save record',
+    saveChanges: 'Save changes',
     saving: 'Saving...',
+    cancel: 'Cancel editing',
+    edit: 'Edit',
+    delete: 'Delete',
+    deleting: 'Deleting...',
+    actions: 'Actions',
     refresh: 'Refresh list',
     loading: 'Loading data...',
     networkError: 'The application could not connect to the configured APIs.',
@@ -39,7 +46,10 @@ const enUS = {
     title: 'Doctors',
     description:
       'Manage doctor records through the PHP API connected to the shared project MySQL database.',
-    successMessage: 'Doctor created successfully.',
+    createSuccessMessage: 'Doctor created successfully.',
+    updateSuccessMessage: 'Doctor updated successfully.',
+    deleteSuccessMessage: 'Doctor removed successfully.',
+    deleteConfirmation: 'Do you really want to remove this doctor?',
     form: {
       nome: 'Name',
       nomePlaceholder: 'Ex.: John Doe',
@@ -53,6 +63,7 @@ const enUS = {
         nome: 'Name',
         CRM: 'CRM',
         UFCRM: 'State',
+        actions: 'Actions',
       },
     },
     validation: {
@@ -67,7 +78,10 @@ const enUS = {
     title: 'Patients',
     description:
       'Create and list patients through the Node.js API while sharing the same MySQL database.',
-    successMessage: 'Patient created successfully.',
+    createSuccessMessage: 'Patient created successfully.',
+    updateSuccessMessage: 'Patient updated successfully.',
+    deleteSuccessMessage: 'Patient removed successfully.',
+    deleteConfirmation: 'Do you really want to remove this patient?',
     form: {
       nome: 'Name',
       nomePlaceholder: 'Ex.: Mary Smith',
@@ -83,6 +97,7 @@ const enUS = {
         dataNascimento: 'Birth date',
         carteirinha: 'Member card',
         cpf: 'CPF',
+        actions: 'Actions',
       },
     },
     validation: {

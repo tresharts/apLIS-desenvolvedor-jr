@@ -29,6 +29,24 @@
   color: var(--text-strong);
 }
 
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.table-action-button {
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(207, 179, 149, 0.2);
+  color: var(--text-strong);
+}
+
+.table-action-button--danger {
+  background: rgba(178, 135, 112, 0.18);
+  color: var(--danger);
+}
+
 .data-table tr:last-child td {
   border-bottom: none;
 }

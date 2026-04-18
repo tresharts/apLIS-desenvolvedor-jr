@@ -70,6 +70,17 @@ function createApiClient(baseUrl) {
         body: JSON.stringify(body),
       })
     },
+    put(path, body) {
+      return request(baseUrl, path, {
+        method: 'PUT',
+        body: JSON.stringify(body),
+      })
+    },
+    delete(path) {
+      return request(baseUrl, path, {
+        method: 'DELETE',
+      })
+    },
   }
 }
 

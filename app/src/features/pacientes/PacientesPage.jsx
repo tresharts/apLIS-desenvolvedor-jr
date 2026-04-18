@@ -5,7 +5,12 @@ import FeedbackMessage from '../../components/FeedbackMessage'
 import FormField from '../../components/FormField'
 import PageHeader from '../../components/PageHeader'
 import { ApiClientError } from '../../services/apiClient'
-import { createPaciente, listPacientes } from './pacientes.api'
+import {
+  createPaciente,
+  deletePaciente,
+  listPacientes,
+  updatePaciente,
+} from './pacientes.api'
 import { mapPacienteFormToRequest } from './pacientes.mapper'
 
 const initialFormData = {
@@ -81,6 +86,8 @@ function PacientesPage({ messages, commonMessages }) {
   const [pacientes, setPacientes] = useState([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [editingId, setEditingId] = useState(null)
+  const [deletingId, setDeletingId] = useState(null)
 
   const loadPacientes = useCallback(async () => {
     setLoading(true)
@@ -117,6 +124,25 @@ function PacientesPage({ messages, commonMessages }) {
     }
   }
 
+  function handleEdit(paciente) {
+    setEditingId(paciente.id)
+    setFieldErrors({})
+    setFeedback(null)
+    setFormData({
+      nome: paciente.nome,
+      dataNascimento: paciente.dataNascimento ?? '',
+      carteirinha: paciente.carteirinha,
+      cpf: paciente.cpf,
+    })
+  }
+
+  function handleCancelEdit() {
+    setEditingId(null)
+    setFieldErrors({})
+    setFeedback(null)
+    setFormData(initialFormData)
+  }
+
   async function handleSubmit(event) {
     event.preventDefault()
     const errors = validatePacienteForm(formData, messages)
@@ -135,12 +161,23 @@ function PacientesPage({ messages, commonMessages }) {
     setFieldErrors({})
 
     try {
-      await createPaciente(mapPacienteFormToRequest(formData))
+      const payload = mapPacienteFormToRequest(formData)
+
+      if (editingId === null) {
+        await createPaciente(payload)
+      } else {
+        await updatePaciente(editingId, payload)
+      }
+
+      setEditingId(null)
       setFormData(initialFormData)
       setFeedback({
         type: 'success',
         title: commonMessages.successTitle,
-        message: messages.successMessage,
+        message:
+          editingId === null
+            ? messages.createSuccessMessage
+            : messages.updateSuccessMessage,
       })
       await loadPacientes()
     } catch (error) {
@@ -155,6 +192,39 @@ function PacientesPage({ messages, commonMessages }) {
     }
   }
 
+  async function handleDelete(paciente) {
+    const confirmed = window.confirm(messages.deleteConfirmation)
+
+    if (!confirmed) {
+      return
+    }
+
+    setDeletingId(paciente.id)
+
+    try {
+      await deletePaciente(paciente.id)
+
+      if (editingId === paciente.id) {
+        handleCancelEdit()
+      }
+
+      setFeedback({
+        type: 'success',
+        title: commonMessages.successTitle,
+        message: messages.deleteSuccessMessage,
+      })
+      await loadPacientes()
+    } catch (error) {
+      setFeedback({
+        type: 'error',
+        title: commonMessages.errorTitle,
+        message: resolveFeedbackMessage(error, commonMessages),
+      })
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   const columns = [
     { key: 'nome', label: messages.table.columns.nome },
     {
@@ -164,6 +234,31 @@ function PacientesPage({ messages, commonMessages }) {
     },
     { key: 'carteirinha', label: messages.table.columns.carteirinha },
     { key: 'cpf', label: messages.table.columns.cpf },
+    {
+      key: 'actions',
+      label: messages.table.columns.actions,
+      render: (row) => (
+        <div className="table-actions">
+          <button
+            type="button"
+            className="table-action-button"
+            onClick={() => handleEdit(row)}
+          >
+            {commonMessages.edit}
+          </button>
+          <button
+            type="button"
+            className="table-action-button table-action-button--danger"
+            onClick={() => void handleDelete(row)}
+            disabled={deletingId === row.id}
+          >
+            {deletingId === row.id
+              ? commonMessages.deleting
+              : commonMessages.delete}
+          </button>
+        </div>
+      ),
+    },
   ]
 
   return (
@@ -178,7 +273,11 @@ function PacientesPage({ messages, commonMessages }) {
       <div className="entity-grid">
         <section className="panel panel--form">
           <div className="panel__heading">
-            <h3>{commonMessages.formTitle}</h3>
+            <h3>
+              {editingId === null
+                ? commonMessages.formTitle
+                : commonMessages.editTitle}
+            </h3>
           </div>
 
           <FeedbackMessage
@@ -227,9 +326,29 @@ function PacientesPage({ messages, commonMessages }) {
               inputMode="numeric"
             />
 
-            <button className="primary-button" type="submit" disabled={submitting}>
-              {submitting ? commonMessages.saving : commonMessages.save}
-            </button>
+            <div className="entity-form__actions">
+              <button
+                className="primary-button"
+                type="submit"
+                disabled={submitting}
+              >
+                {submitting
+                  ? commonMessages.saving
+                  : editingId === null
+                    ? commonMessages.save
+                    : commonMessages.saveChanges}
+              </button>
+
+              {editingId !== null ? (
+                <button
+                  type="button"
+                  className="secondary-button"
+                  onClick={handleCancelEdit}
+                >
+                  {commonMessages.cancel}
+                </button>
+              ) : null}
+            </div>
           </form>
         </section>
 

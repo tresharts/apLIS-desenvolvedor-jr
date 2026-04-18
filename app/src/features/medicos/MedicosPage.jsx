@@ -5,7 +5,12 @@ import FeedbackMessage from '../../components/FeedbackMessage'
 import FormField from '../../components/FormField'
 import PageHeader from '../../components/PageHeader'
 import { ApiClientError } from '../../services/apiClient'
-import { createMedico, listMedicos } from './medicos.api'
+import {
+  createMedico,
+  deleteMedico,
+  listMedicos,
+  updateMedico,
+} from './medicos.api'
 import { mapMedicoFormToRequest } from './medicos.mapper'
 
 const initialFormData = {
@@ -59,6 +64,8 @@ function MedicosPage({ messages, commonMessages }) {
   const [medicos, setMedicos] = useState([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [editingId, setEditingId] = useState(null)
+  const [deletingId, setDeletingId] = useState(null)
 
   const loadMedicos = useCallback(async () => {
     setLoading(true)
@@ -95,6 +102,24 @@ function MedicosPage({ messages, commonMessages }) {
     }
   }
 
+  function handleEdit(medico) {
+    setEditingId(medico.id)
+    setFieldErrors({})
+    setFeedback(null)
+    setFormData({
+      nome: medico.nome,
+      CRM: medico.CRM,
+      UFCRM: medico.UFCRM,
+    })
+  }
+
+  function handleCancelEdit() {
+    setEditingId(null)
+    setFieldErrors({})
+    setFeedback(null)
+    setFormData(initialFormData)
+  }
+
   async function handleSubmit(event) {
     event.preventDefault()
     const errors = validateMedicoForm(formData, messages)
@@ -113,12 +138,23 @@ function MedicosPage({ messages, commonMessages }) {
     setFieldErrors({})
 
     try {
-      await createMedico(mapMedicoFormToRequest(formData))
+      const payload = mapMedicoFormToRequest(formData)
+
+      if (editingId === null) {
+        await createMedico(payload)
+      } else {
+        await updateMedico(editingId, payload)
+      }
+
+      setEditingId(null)
       setFormData(initialFormData)
       setFeedback({
         type: 'success',
         title: commonMessages.successTitle,
-        message: messages.successMessage,
+        message:
+          editingId === null
+            ? messages.createSuccessMessage
+            : messages.updateSuccessMessage,
       })
       await loadMedicos()
     } catch (error) {
@@ -133,10 +169,68 @@ function MedicosPage({ messages, commonMessages }) {
     }
   }
 
+  async function handleDelete(medico) {
+    const confirmed = window.confirm(messages.deleteConfirmation)
+
+    if (!confirmed) {
+      return
+    }
+
+    setDeletingId(medico.id)
+
+    try {
+      await deleteMedico(medico.id)
+
+      if (editingId === medico.id) {
+        handleCancelEdit()
+      }
+
+      setFeedback({
+        type: 'success',
+        title: commonMessages.successTitle,
+        message: messages.deleteSuccessMessage,
+      })
+      await loadMedicos()
+    } catch (error) {
+      setFeedback({
+        type: 'error',
+        title: commonMessages.errorTitle,
+        message: resolveFeedbackMessage(error, commonMessages),
+      })
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   const columns = [
     { key: 'nome', label: messages.table.columns.nome },
     { key: 'CRM', label: messages.table.columns.CRM },
     { key: 'UFCRM', label: messages.table.columns.UFCRM },
+    {
+      key: 'actions',
+      label: messages.table.columns.actions,
+      render: (row) => (
+        <div className="table-actions">
+          <button
+            type="button"
+            className="table-action-button"
+            onClick={() => handleEdit(row)}
+          >
+            {commonMessages.edit}
+          </button>
+          <button
+            type="button"
+            className="table-action-button table-action-button--danger"
+            onClick={() => void handleDelete(row)}
+            disabled={deletingId === row.id}
+          >
+            {deletingId === row.id
+              ? commonMessages.deleting
+              : commonMessages.delete}
+          </button>
+        </div>
+      ),
+    },
   ]
 
   return (
@@ -151,7 +245,11 @@ function MedicosPage({ messages, commonMessages }) {
       <div className="entity-grid">
         <section className="panel panel--form">
           <div className="panel__heading">
-            <h3>{commonMessages.formTitle}</h3>
+            <h3>
+              {editingId === null
+                ? commonMessages.formTitle
+                : commonMessages.editTitle}
+            </h3>
           </div>
 
           <FeedbackMessage
@@ -190,9 +288,29 @@ function MedicosPage({ messages, commonMessages }) {
               />
             </div>
 
-            <button className="primary-button" type="submit" disabled={submitting}>
-              {submitting ? commonMessages.saving : commonMessages.save}
-            </button>
+            <div className="entity-form__actions">
+              <button
+                className="primary-button"
+                type="submit"
+                disabled={submitting}
+              >
+                {submitting
+                  ? commonMessages.saving
+                  : editingId === null
+                    ? commonMessages.save
+                    : commonMessages.saveChanges}
+              </button>
+
+              {editingId !== null ? (
+                <button
+                  type="button"
+                  className="secondary-button"
+                  onClick={handleCancelEdit}
+                >
+                  {commonMessages.cancel}
+                </button>
+              ) : null}
+            </div>
           </form>
         </section>
 

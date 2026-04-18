@@ -12,4 +12,12 @@ function createMedico(payload) {
   return phpApiClient.post('/api/v1/medicos', payload)
 }
 
-export { createMedico, listMedicos }
+function updateMedico(id, payload) {
+  return phpApiClient.put(`/api/v1/medicos/${id}`, payload)
+}
+
+function deleteMedico(id) {
+  return phpApiClient.delete(`/api/v1/medicos/${id}`)
+}
+
+export { createMedico, deleteMedico, listMedicos, updateMedico }
