@@ -1,0 +1,28 @@
+:root {
+  --bg-canvas: #f7f1e8;
+  --bg-shell: rgba(255, 251, 245, 0.96);
+  --bg-panel: rgba(255, 251, 246, 0.92);
+  --bg-panel-strong: #fffdf9;
+  --bg-sidebar-start: #f5eee4;
+  --bg-sidebar-end: #ebe0d0;
+  --text-strong: #5b4b3f;
+  --text-soft: #8a7765;
+  --text-inverse: #5b4b3f;
+  --border-soft: rgba(91, 75, 63, 0.12);
+  --border-strong: rgba(91, 75, 63, 0.22);
+  --accent: #cfb395;
+  --accent-strong: #a78663;
+  --accent-soft: rgba(207, 179, 149, 0.26);
+  --success: #8f7a66;
+  --success-soft: rgba(143, 122, 102, 0.16);
+  --danger: #b28770;
+  --danger-soft: rgba(178, 135, 112, 0.15);
+  --shadow-soft: 0 24px 60px rgba(116, 95, 77, 0.12);
+  --shadow-panel: 0 18px 36px rgba(116, 95, 77, 0.08);
+  --radius-shell: 28px;
+  --radius-panel: 24px;
+  --radius-pill: 999px;
+  --font-body: 'IBM Plex Sans', 'Avenir Next', 'Trebuchet MS', sans-serif;
+  --font-heading: 'Fraunces', 'Iowan Old Style', 'Georgia', serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', monospace;
+}
