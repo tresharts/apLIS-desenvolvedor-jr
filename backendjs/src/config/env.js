@@ -51,6 +51,6 @@ module.exports = {
     port: Number(readEnv('DB_PORT', '3306')),
     database: readEnv('DB_DATABASE', 'aplis_teste'),
     user: readEnv('DB_USERNAME', 'aplis'),
-    password: readEnv('DB_PASSWORD', 'aplis'),
+    password: readEnv('DB_PASSWORD', ''),
   },
 };

@@ -4,17 +4,17 @@ services:
     container_name: aplis_mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: aplis_teste
-      MYSQL_USER: aplis
-      MYSQL_PASSWORD: aplis
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?defina MYSQL_ROOT_PASSWORD no arquivo .env}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-aplis_teste}
+      MYSQL_USER: ${MYSQL_USER:-aplis}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?defina MYSQL_PASSWORD no arquivo .env}
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -proot"]
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -36,9 +36,9 @@ services:
       CORS_ORIGIN: http://localhost:5173
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_DATABASE: aplis_teste
-      DB_USERNAME: aplis
-      DB_PASSWORD: aplis
+      DB_DATABASE: ${MYSQL_DATABASE:-aplis_teste}
+      DB_USERNAME: ${MYSQL_USER:-aplis}
+      DB_PASSWORD: ${MYSQL_PASSWORD:?defina MYSQL_PASSWORD no arquivo .env}
     depends_on:
       mysql:
         condition: service_healthy
@@ -56,9 +56,9 @@ services:
       CORS_ORIGIN: http://localhost:5173
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_DATABASE: aplis_teste
-      DB_USERNAME: aplis
-      DB_PASSWORD: aplis
+      DB_DATABASE: ${MYSQL_DATABASE:-aplis_teste}
+      DB_USERNAME: ${MYSQL_USER:-aplis}
+      DB_PASSWORD: ${MYSQL_PASSWORD:?defina MYSQL_PASSWORD no arquivo .env}
     depends_on:
       mysql:
         condition: service_healthy

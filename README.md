@@ -82,6 +82,8 @@ Entregar uma aplicação simples e funcional com:
 Na raiz do projeto:
 
 ```bash
+cp .env.example .env
+# preencha MYSQL_ROOT_PASSWORD e MYSQL_PASSWORD no arquivo .env
 docker compose up -d --build
 ```
 
@@ -101,6 +103,8 @@ Se preferir desenvolvimento local para Node.js e React, também funciona:
 Na raiz do projeto:
 
 ```bash
+cp .env.example .env
+# preencha MYSQL_ROOT_PASSWORD e MYSQL_PASSWORD no arquivo .env
 docker compose up -d mysql backend-php
 ```
 
@@ -110,6 +114,7 @@ docker compose up -d mysql backend-php
 cd backendjs
 npm install
 cp .env.example .env
+# use o mesmo valor definido em MYSQL_PASSWORD na raiz do projeto
 npm run dev
 ```
 
@@ -143,6 +148,18 @@ Observação:
 
 ## Variáveis de ambiente
 
+### `.env.example` na raiz
+
+```env
+MYSQL_ROOT_PASSWORD=
+MYSQL_DATABASE=aplis_teste
+MYSQL_USER=aplis
+MYSQL_PASSWORD=
+```
+
+Antes de subir com Docker, copie para `.env` e preencha as senhas localmente.
+Isso vale tanto para `docker compose up -d --build` quanto para `docker compose up -d mysql backend-php`.
+
 ### `backendphp/.env.example`
 
 ```env
@@ -153,7 +170,7 @@ DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=aplis_teste
 DB_USERNAME=aplis
-DB_PASSWORD=aplis
+DB_PASSWORD=
 ```
 
 ### `backendjs/.env.example`
@@ -165,7 +182,7 @@ DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=aplis_teste
 DB_USERNAME=aplis
-DB_PASSWORD=aplis
+DB_PASSWORD=
 ```
 
 ### `app/.env.example`

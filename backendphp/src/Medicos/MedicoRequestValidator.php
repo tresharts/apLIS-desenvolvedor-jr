@@ -14,13 +14,13 @@ final class MedicoRequestValidator
 
         if ($medicoRequest->getNome() === '') {
             $errors['nome'] = 'Nome é obrigatório';
-        } elseif (mb_strlen($medicoRequest->getNome()) > 255) {
+        } elseif ($this->measureLength($medicoRequest->getNome()) > 255) {
             $errors['nome'] = 'Nome deve ter no máximo 255 caracteres';
         }
 
         if ($medicoRequest->getCrm() === '') {
             $errors['CRM'] = 'CRM é obrigatório';
-        } elseif (mb_strlen($medicoRequest->getCrm()) > 20) {
+        } elseif ($this->measureLength($medicoRequest->getCrm()) > 20) {
             $errors['CRM'] = 'CRM deve ter no máximo 20 caracteres';
         }
 
@@ -33,5 +33,14 @@ final class MedicoRequestValidator
         if ($errors !== []) {
             throw new ValidationException('Dados inválidos', $errors);
         }
+    }
+
+    private function measureLength(string $value): int
+    {
+        if (function_exists('mb_strlen')) {
+            return mb_strlen($value);
+        }
+
+        return strlen($value);
     }
 }
